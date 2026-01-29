@@ -28,6 +28,9 @@ jobs:
       # 📢 Telegram notification (always runs)
       - name: 📢 Telegram Notification
         if: always()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           JOB_STATUS="${{ job.status }}"
           REPO="${{ github.repository }}"
@@ -35,6 +38,13 @@ jobs:
           COMMIT="${{ github.sha }}"
           WORKFLOW="${{ github.workflow }}"
           COMMIT_SHORT=$(echo "$COMMIT" | cut -c1-7)
+
+          # Check if secrets are set
+          if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+            echo "⚠️ Telegram secrets not configured. Skipping notification."
+            echo "Please set TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID in repository secrets."
+            exit 0
+          fi
 
           if [ "$JOB_STATUS" == "success" ]; then
             MESSAGE="✅ <b>CI/CD SUCCESS</b>%0A%0A📦 Repository: <code>$REPO</code>%0A🌿 Branch: <code>$BRANCH</code>%0A🔖 Commit: <code>$COMMIT_SHORT</code>%0A⚙️ Workflow: <code>$WORKFLOW</code>"
@@ -45,8 +55,8 @@ jobs:
           echo "Sending Telegram notification..."
           echo "Job Status: $JOB_STATUS"
 
-          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-            -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d "chat_id=${TELEGRAM_CHAT_ID}" \
             -d "text=$MESSAGE" \
             -d "parse_mode=HTML")
 
@@ -59,6 +69,11 @@ jobs:
           if [ "$HTTP_CODE" != "200" ]; then
             echo "❌ Telegram notification failed with HTTP code: $HTTP_CODE"
             echo "Full response: $BODY"
+            echo ""
+            echo "Common fixes:"
+            echo "1. Verify TELEGRAM_BOT_TOKEN is correct (format: 123456789:ABCdefGHI...)"
+            echo "2. Verify TELEGRAM_CHAT_ID is correct (numeric ID)"
+            echo "3. Make sure the bot has permission to message the chat"
             exit 1
           else
             echo "✅ Telegram notification sent successfully!"
