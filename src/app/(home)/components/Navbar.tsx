@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Clock, Moon, Sun } from 'lucide-react';
+import {Moon, Sun } from 'lucide-react';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
@@ -95,7 +95,7 @@ export default function Navbar() {
           {cambodiaTime && (
             <motion.div
               variants={itemVariants}
-              className="hidden sm:flex items-center gap-2 rounded-full border border-gray-200/70 dark:border-gray-700/70 bg-white/70 dark:bg-gray-900/50 px-3 py-1.5 backdrop-blur-md shadow-sm"
+              className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-gray-200/70 dark:border-gray-700/70 bg-white/70 dark:bg-gray-900/50 px-2.5 sm:px-3 py-1.5 backdrop-blur-md shadow-sm"
             >
               <span className="flex items-center gap-1.5">
                 <motion.span
@@ -113,7 +113,7 @@ export default function Navbar() {
                   <span className="absolute inset-0 rounded-full bg-emerald-500/40" />
                   <span className="absolute inset-0 rounded-full bg-emerald-500" />
                 </motion.span>
-                <Clock className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+
               </span>
               <span className="overflow-hidden rounded-sm ring-1 ring-black/10 dark:ring-white/10">
                 <Image
@@ -124,10 +124,10 @@ export default function Navbar() {
                   className="h-3 w-[18px] object-cover"
                 />
               </span>
-              <span className="text-[11px] font-medium tracking-wide text-gray-600 dark:text-gray-300">
+              <span className="hidden md:inline text-[11px] font-medium tracking-wide text-gray-600 dark:text-gray-300">
                 Phnom Penh
               </span>
-              <span className="h-4 w-px bg-gray-200/70 dark:bg-gray-700/70" />
+              <span className="hidden md:block h-4 w-px bg-gray-200/70 dark:bg-gray-700/70" />
               <span className="text-xs font-semibold tabular-nums font-mono text-gray-900 dark:text-gray-100">
                 {cambodiaTime}
               </span>
