@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 export default function Navbar() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [cambodiaTime, setCambodiaTime] = useState('');
 
   // Avoid hydration mismatch
   useEffect(() => {
@@ -61,6 +62,27 @@ export default function Navbar() {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
+  useEffect(() => {
+    if (!mounted) return;
+
+    const updateTime = () => {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+        timeZone: 'Asia/Phnom_Penh',
+      });
+      setCambodiaTime(timeString);
+    };
+
+    updateTime();
+    const intervalId = setInterval(updateTime, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [mounted]);
+
   if (!mounted) {
     return null;
   }
@@ -84,16 +106,16 @@ export default function Navbar() {
 
         {/* Social Links and Theme Toggle */}
         <motion.div
-          className="flex items-center  space-x-1"
+          className="flex items-center space-x-1"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
           {/* Social Icons */}
-          {socials.map((social, index) => {
+          {socials.map(social => {
             const Icon = social.icon;
             return (
-              <motion.div key={index} variants={itemVariants}>
+              <motion.div key={social.label} variants={itemVariants}>
                 <Link
                   href={social.Link}
                   aria-label={social.label}
@@ -111,6 +133,17 @@ export default function Navbar() {
               </motion.div>
             );
           })}
+
+          {cambodiaTime && (
+            <motion.div variants={itemVariants} className="hidden sm:flex flex-col items-end px-2">
+              <span className="text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500">
+                Phnom Penh
+              </span>
+              <span className="text-xs font-semibold text-gray-800 dark:text-gray-100">
+                {cambodiaTime}
+              </span>
+            </motion.div>
+          )}
 
           {/* Theme Toggle Button */}
           <motion.div variants={itemVariants}>

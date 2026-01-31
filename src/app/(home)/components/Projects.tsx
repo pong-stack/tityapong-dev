@@ -344,7 +344,7 @@ const getTechConfig = (tech: string) => {
 
 export default function PortfolioShowcase() {
   return (
-    <div className="min-h-screen bg-background text-foreground p-4 md:p-8 transition-colors duration-300">
+    <div className="min-h-screen bg-gradient-to-b from-background via-background/95 to-background text-foreground p-4 md:p-8 transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
         <div className="relative mb-8">
           <div className="text-center">
@@ -385,16 +385,12 @@ interface ProjectProps {
   }[];
 }
 
-function ProjectListItem({
-  title,
-  period,
-  description,
-  images,
-  technologies,
-  features,
-  links,
-}: ProjectProps) {
+function ProjectImageCarousel({ title, images }: { title: string; images: string[] }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  if (images.length === 0) {
+    return null;
+  }
 
   const nextImage = () => {
     setCurrentImageIndex(prev => (prev + 1) % images.length);
@@ -409,59 +405,75 @@ function ProjectListItem({
   };
 
   return (
-    <div className="bg-card border border-border rounded-lg overflow-hidden transition-all duration-300 hover:shadow-md dark:hover:shadow-[0_0_15px_rgba(120,120,255,0.15)]">
-      <div className="flex flex-col md:flex-row min-h-[250px]">
-        {/* Image Section - Left Side (50% width, full height) */}
-        <div className="md:w-1/2 relative overflow-hidden aspect-[4/2] md:aspect-[16/9]">
-          {images.map((imageSrc, index) => (
-            <Image
-              key={imageSrc}
-              src={imageSrc || '/placeholder.svg'}
-              alt={`${title} screenshot ${index + 1}`}
-              fill
-              className={`object-contain transition-opacity duration-300 ${
-                index === currentImageIndex ? 'opacity-100 relative' : 'opacity-0 absolute inset-0'
-              }`}
-            />
-          ))}
+    <div className="md:w-1/2 relative overflow-hidden aspect-[4/2] md:aspect-[16/9]">
+      {images.map((imageSrc, index) => (
+        <Image
+          key={imageSrc || index}
+          src={imageSrc || '/placeholder.svg'}
+          alt={`${title} screenshot ${index + 1}`}
+          fill
+          className={`object-contain transition-opacity duration-300 ${
+            index === currentImageIndex ? 'opacity-100 relative' : 'opacity-0 absolute inset-0'
+          }`}
+        />
+      ))}
 
-          {/* Navigation Controls */}
-          {images.length > 1 && (
-            <>
+      {images.length > 1 && (
+        <>
+          <button
+            type="button"
+            onClick={prevImage}
+            className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-200 backdrop-blur-sm shadow-lg z-10"
+            aria-label="Previous image"
+          >
+            <FaChevronLeft className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={nextImage}
+            className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-200 backdrop-blur-sm shadow-lg z-10"
+            aria-label="Next image"
+          >
+            <FaChevronRight className="w-4 h-4" />
+          </button>
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+            {images.map((imageSrc, index) => (
               <button
-                onClick={prevImage}
-                className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-200 backdrop-blur-sm shadow-lg z-10"
-                aria-label="Previous image"
-              >
-                <FaChevronLeft className="w-4 h-4" />
-              </button>
-              <button
-                onClick={nextImage}
-                className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-200 backdrop-blur-sm shadow-lg z-10"
-                aria-label="Next image"
-              >
-                <FaChevronRight className="w-4 h-4" />
-              </button>
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-                {images.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => goToImage(index)}
-                    className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
-                      index === currentImageIndex
-                        ? 'bg-white scale-125 shadow-lg'
-                        : 'bg-white/60 hover:bg-white/80'
-                    }`}
-                    aria-label={`Go to image ${index + 1}`}
-                  />
-                ))}
-              </div>
-              <div className="absolute top-3 right-3 bg-black/60 text-white px-2 py-1 rounded-full text-xs backdrop-blur-sm shadow-lg z-10">
-                {currentImageIndex + 1} / {images.length}
-              </div>
-            </>
-          )}
-        </div>
+                key={imageSrc || `${title}-dot-${index}`}
+                type="button"
+                onClick={() => goToImage(index)}
+                className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
+                  index === currentImageIndex
+                    ? 'bg-white scale-125 shadow-lg'
+                    : 'bg-white/60 hover:bg-white/80'
+                }`}
+                aria-label={`Go to image ${index + 1}`}
+              />
+            ))}
+          </div>
+          <div className="absolute top-3 right-3 bg-black/60 text-white px-2 py-1 rounded-full text-xs backdrop-blur-sm shadow-lg z-10">
+            {currentImageIndex + 1} / {images.length}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function ProjectListItem({
+  title,
+  period,
+  description,
+  images,
+  technologies,
+  features,
+  links,
+}: ProjectProps) {
+  return (
+    <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-background/80 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-purple-500/5 opacity-0 blur-2xl transition-opacity duration-300 hover:opacity-100" />
+      <div className="flex flex-col md:flex-row min-h-[250px]">
+        <ProjectImageCarousel title={title} images={images} />
 
         {/* Content Section - Right Side (50% width) */}
         <div className="md:w-1/2 p-6 flex flex-col justify-between">
@@ -478,8 +490,8 @@ function ProjectListItem({
               </div>
               <div className="bg-muted/20 rounded-md p-3 border border-border/50">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                  {features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-2 text-sm py-1">
+                  {features.map(feature => (
+                    <div key={feature} className="flex items-center gap-2 text-sm py-1">
                       <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></div>
                       <span className="text-foreground/90">{feature}</span>
                     </div>
@@ -492,11 +504,11 @@ function ProjectListItem({
             <div className="mb-6">
               <h3 className="font-semibold mb-2 text-sm">Technologies:</h3>
               <div className="flex flex-wrap gap-1.5">
-                {technologies.map((tech, index) => {
+                {technologies.map(tech => {
                   const config = getTechConfig(tech);
                   return (
                     <span
-                      key={index}
+                      key={tech}
                       className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200 hover:scale-105 hover:shadow-md ${config.bgColor} ${config.textColor}`}
                     >
                       {config.icon}
@@ -510,9 +522,9 @@ function ProjectListItem({
 
           {/* Links - Bottom of content */}
           <div className="flex gap-2 mt-auto">
-            {links.map((link, index) => (
+            {links.map(link => (
               <a
-                key={index}
+                key={link.url || link.label}
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"

@@ -95,7 +95,7 @@ interface CardWrapperProps {
 
 const CardWrapper = ({ children, url }: CardWrapperProps) => {
   const content = (
-    <div className="group relative overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-6 transition-all duration-300 hover:border-blue-500 hover:shadow-lg hover:-translate-y-1 cursor-pointer">
+    <div className="group relative overflow-hidden rounded-2xl border border-border/60 bg-background/70 p-6 shadow-sm ring-1 ring-black/5 backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg dark:ring-white/10">
       <div className="relative z-10">
         {children}
         {url && (
@@ -122,31 +122,32 @@ const CardWrapper = ({ children, url }: CardWrapperProps) => {
 
 interface ExperienceCardProps {
   experience: Experience;
-  index: number;
 }
 
 const ExperienceCard = ({ experience }: ExperienceCardProps) => (
   <CardWrapper url={experience.url}>
     <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
       <div className="flex items-start gap-4 flex-1">
-        <div className="relative h-12 w-12 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-600 flex-shrink-0">
+        <div className="relative h-12 w-12 overflow-hidden rounded-xl border border-border/60 bg-muted/30 flex-shrink-0">
           <Image
             src={experience.logo || '/placeholder.svg?height=48&width=48'}
             alt={`${experience.company} logo`}
             width={48}
             height={48}
-            className="object-cover rounded-lg"
+            className="object-cover rounded-xl"
           />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
-            <div className="space-y-1">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+            <div className="space-y-2">
+              <h2 className="text-xl font-semibold tracking-tight text-foreground">
                 {experience.company}
               </h2>
-              <p className="text-blue-600 dark:text-blue-400 font-medium">{experience.role}</p>
+              <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+                {experience.role}
+              </span>
             </div>
-            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 text-sm bg-gray-50 dark:bg-gray-800 px-3 py-1 rounded-md">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/60 px-3 py-1 rounded-full">
               <Calendar className="w-4 h-4" />
               <span>
                 {experience.startDate} - {experience.endDate}
@@ -154,10 +155,10 @@ const ExperienceCard = ({ experience }: ExperienceCardProps) => (
             </div>
           </div>
           <div className="space-y-2">
-            {experience.description.map((desc, descIndex) => (
-              <div key={descIndex} className="flex items-start gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 flex-shrink-0" />
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">{desc}</p>
+            {experience.description.map(desc => (
+              <div key={desc} className="flex items-start gap-3">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary/70 mt-2 flex-shrink-0" />
+                <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
@@ -169,31 +170,32 @@ const ExperienceCard = ({ experience }: ExperienceCardProps) => (
 
 interface EducationCardProps {
   education: Education;
-  index: number;
 }
 
 const EducationCard = ({ education }: EducationCardProps) => (
   <CardWrapper url={education.url}>
     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
       <div className="flex items-start gap-4 flex-1">
-        <div className="relative h-12 w-12 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-600 flex-shrink-0">
+        <div className="relative h-12 w-12 overflow-hidden rounded-xl border border-border/60 bg-muted/30 flex-shrink-0">
           <Image
             src={education.logo || '/placeholder.svg?height=48&width=48'}
             alt={`${education.institution} logo`}
             width={48}
             height={48}
-            className="object-cover rounded-lg"
+            className="object-cover rounded-xl"
           />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-            <div className="space-y-1">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+            <div className="space-y-2">
+              <h2 className="text-xl font-semibold tracking-tight text-foreground">
                 {education.institution}
               </h2>
-              <p className="text-blue-600 dark:text-blue-400 font-medium">{education.degree}</p>
+              <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+                {education.degree}
+              </span>
             </div>
-            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 text-sm bg-gray-50 dark:bg-gray-800 px-3 py-1 rounded-md">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/60 px-3 py-1 rounded-full">
               <Calendar className="w-4 h-4" />
               <span>
                 {education.startDate} - {education.endDate}
@@ -208,20 +210,20 @@ const EducationCard = ({ education }: EducationCardProps) => (
 
 export default function Portfolio() {
   return (
-    <div className="mx-auto bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white p-6 sm:p-12 space-y-16">
-      <section className="max-w-4xl mx-auto">
-        <Title text="Experience" className="flex flex-col items-center justify-center -rotate-6" />
-        <div className="space-y-8 mt-12">
-          {experiences.map((experience, index) => (
-            <ExperienceCard key={`work-${index}`} experience={experience} index={index} />
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16 space-y-16">
+      <section className="space-y-8">
+        <Title text="Experience" className="flex flex-col items-center justify-center" />
+        <div className="space-y-6">
+          {experiences.map(experience => (
+            <ExperienceCard key={experience.company} experience={experience} />
           ))}
         </div>
       </section>
-      <section className="max-w-4xl mx-auto">
+      <section className="space-y-8">
         <Title text="Education" className="flex flex-col items-center justify-center" />
-        <div className="space-y-8 mt-12">
-          {education.map((edu, index) => (
-            <EducationCard key={`edu-${index}`} education={edu} index={index} />
+        <div className="space-y-6">
+          {education.map(edu => (
+            <EducationCard key={edu.institution} education={edu} />
           ))}
         </div>
       </section>

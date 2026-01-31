@@ -1,11 +1,8 @@
 'use client';
-
-import { useRef } from 'react';
 import {
   SiReact,
   SiNextdotjs,
   SiTailwindcss,
-  SiMui,
   SiVuedotjs,
   SiNodedotjs,
   SiExpress,
@@ -19,65 +16,64 @@ import {
   SiRailway,
   SiPhp,
   SiLaravel,
+  SiNestjs,
 } from 'react-icons/si';
 import { TbApi } from 'react-icons/tb';
 import Title from './Tittle';
 
+const skillCategories = [
+  {
+    category: 'Front-End',
+    skills: [
+      { name: 'React.js', icon: SiReact, color: '#61DAFB' },
+      { name: 'Next.js', icon: SiNextdotjs, color: '#FFFFFF' },
+      { name: 'Vue.js', icon: SiVuedotjs, color: '#4FC08D' },
+      { name: 'Tailwind CSS', icon: SiTailwindcss, color: '#06B6D4' },
+      { name: 'shadcn UI', icon: SiReact, color: '#FFFFFF' },
+    ],
+  },
+  {
+    category: 'Back-End',
+    skills: [
+      { name: 'Node.js', icon: SiNodedotjs, color: '#339933' },
+      { name: 'Express.js', icon: SiExpress, color: '#FFFFFF' },
+      { name: 'NestJS', icon: SiNestjs, color: '#E0234E' },
+      { name: 'PHP', icon: SiPhp, color: '#777BB4' },
+      { name: 'Laravel', icon: SiLaravel, color: '#FF2D20' },
+    ],
+  },
+  {
+    category: 'API & Testing',
+    skills: [
+      { name: 'RESTful APIs', icon: TbApi, color: '#FF6B35' },
+      { name: 'Postman', icon: SiPostman, color: '#FF6C37' },
+    ],
+  },
+  {
+    category: 'Database',
+    skills: [{ name: 'MySQL', icon: SiMysql, color: '#4479A1' }],
+  },
+  {
+    category: 'Version Control',
+    skills: [
+      { name: 'Git', icon: SiGit, color: '#F05032' },
+      { name: 'GitHub', icon: SiGithub, color: '#FFFFFF' },
+    ],
+  },
+  {
+    category: 'Design & Deployment',
+    skills: [
+      { name: 'Figma', icon: SiFigma, color: '#9747FF' },
+      { name: 'Vercel', icon: SiVercel, color: '#FFFFFF' },
+      { name: 'Render', icon: SiRender, color: '#46E3B7' },
+      { name: 'Railway', icon: SiRailway, color: '#FFFFFF' },
+    ],
+  },
+];
+
 export default function Skill() {
-  const ref = useRef(null);
-
-  const skillCategories = [
-    {
-      category: 'Front-End',
-      skills: [
-        { name: 'React.js', icon: SiReact, color: '#61DAFB' },
-        { name: 'Next.js', icon: SiNextdotjs, color: '#FFFFFF' },
-        { name: 'Vue.js', icon: SiVuedotjs, color: '#4FC08D' },
-        { name: 'Tailwind CSS', icon: SiTailwindcss, color: '#06B6D4' },
-        { name: 'shadcn UI', icon: SiReact, color: '#FFFFFF' },
-        { name: 'Material UI', icon: SiMui, color: '#007FFF' },
-      ],
-    },
-    {
-      category: 'Back-End',
-      skills: [
-        { name: 'Node.js', icon: SiNodedotjs, color: '#339933' },
-        { name: 'Express.js', icon: SiExpress, color: '#FFFFFF' },
-        { name: 'PHP', icon: SiPhp, color: '#777BB4' },
-        { name: 'Laravel', icon: SiLaravel, color: '#FF2D20' },
-      ],
-    },
-    {
-      category: 'API & Testing',
-      skills: [
-        { name: 'RESTful APIs', icon: TbApi, color: '#FF6B35' },
-        { name: 'Postman', icon: SiPostman, color: '#FF6C37' },
-      ],
-    },
-    {
-      category: 'Database',
-      skills: [{ name: 'MySQL', icon: SiMysql, color: '#4479A1' }],
-    },
-    {
-      category: 'Version Control',
-      skills: [
-        { name: 'Git', icon: SiGit, color: '#F05032' },
-        { name: 'GitHub', icon: SiGithub, color: '#FFFFFF' },
-      ],
-    },
-    {
-      category: 'Design & Deployment',
-      skills: [
-        { name: 'Figma', icon: SiFigma, color: '#9747FF' },
-        { name: 'Vercel', icon: SiVercel, color: '#FFFFFF' },
-        { name: 'Render', icon: SiRender, color: '#46E3B7' },
-        { name: 'Railway', icon: SiRailway, color: '#FFFFFF' },
-      ],
-    },
-  ];
-
   return (
-    <div ref={ref} className="max-w-7xl mx-auto px-4 sm:px-8 py-16">
+    <div className="relative max-w-7xl mx-auto px-4 sm:px-8 py-16">
       <Title text="Skills" className="flex flex-col items-center justify-center mb-16" />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">

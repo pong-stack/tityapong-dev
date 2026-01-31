@@ -4,109 +4,117 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
+const portfolioImages = [
+  {
+    id: 1,
+    src: '/g1.jpg',
+    alt: 'Architecture Building',
+    mobileSpan: 'row-span-2',
+    tabletSpan: 'md:row-span-2',
+    desktopSpan: 'lg:row-span-2',
+  },
+  {
+    id: 2,
+    src: '/g2.jpg',
+    alt: 'Fresh Strawberries',
+    mobileSpan: 'row-span-1',
+    tabletSpan: 'md:row-span-1',
+    desktopSpan: 'lg:row-span-2',
+  },
+  {
+    id: 3,
+    src: '/g8.jpg',
+    alt: 'Dark Rose',
+    mobileSpan: 'row-span-2',
+    tabletSpan: 'md:row-span-2',
+    desktopSpan: 'lg:row-span-1',
+  },
+  {
+    id: 4,
+    src: '/g4.jpg',
+    alt: 'Workspace Setup',
+    mobileSpan: 'row-span-1',
+    tabletSpan: 'md:row-span-1',
+    desktopSpan: 'lg:row-span-2',
+  },
+  {
+    id: 5,
+    src: '/g5.jpg',
+    alt: 'Abstract Dark',
+    mobileSpan: 'row-span-2',
+    tabletSpan: 'md:row-span-2',
+    desktopSpan: 'lg:row-span-1',
+  },
+  {
+    id: 6,
+    src: '/g6.jpg',
+    alt: 'City Lights Bokeh',
+    mobileSpan: 'row-span-1',
+    tabletSpan: 'md:row-span-1',
+    desktopSpan: 'lg:row-span-2',
+  },
+  {
+    id: 7,
+    src: '/g7.jpg',
+    alt: 'City Lights Bokeh',
+    mobileSpan: 'row-span-1',
+    tabletSpan: 'md:row-span-1',
+    desktopSpan: 'lg:row-span-2',
+  },
+];
+
 export default function Component() {
-  const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-  // Using placeholder images with varying dimensions to simulate different aspect ratios
-  // and applying row-span classes for masonry effect across different breakpoints.
-  const portfolioImages = [
-    {
-      id: 1,
-      src: '/g1.jpg',
-      alt: 'Architecture Building',
-      mobileSpan: 'row-span-2',
-      tabletSpan: 'md:row-span-2',
-      desktopSpan: 'lg:row-span-2',
-    },
-    {
-      id: 2,
-      src: '/g2.jpg',
-      alt: 'Fresh Strawberries',
-      mobileSpan: 'row-span-1',
-      tabletSpan: 'md:row-span-1',
-      desktopSpan: 'lg:row-span-2',
-    },
-    {
-      id: 3,
-      src: '/g8.jpg',
-      alt: 'Dark Rose',
-      mobileSpan: 'row-span-2',
-      tabletSpan: 'md:row-span-2',
-      desktopSpan: 'lg:row-span-1',
-    },
-    {
-      id: 4,
-      src: '/g4.jpg',
-      alt: 'Workspace Setup',
-      mobileSpan: 'row-span-1',
-      tabletSpan: 'md:row-span-1',
-      desktopSpan: 'lg:row-span-2',
-    },
-    {
-      id: 5,
-      src: '/g5.jpg',
-      alt: 'Abstract Dark',
-      mobileSpan: 'row-span-2',
-      tabletSpan: 'md:row-span-2',
-      desktopSpan: 'lg:row-span-1',
-    },
-    {
-      id: 6,
-      src: '/g6.jpg',
-      alt: 'City Lights Bokeh',
-      mobileSpan: 'row-span-1',
-      tabletSpan: 'md:row-span-1',
-      desktopSpan: 'lg:row-span-2',
-    },
-    {
-      id: 7,
-      src: '/g7.jpg',
-      alt: 'City Lights Bokeh',
-      mobileSpan: 'row-span-1',
-      tabletSpan: 'md:row-span-1',
-      desktopSpan: 'lg:row-span-2',
-    },
-  ];
-
-  const openModal = (imageId: number) => {
-    setSelectedImage(imageId);
+  const openModal = (index: number) => {
+    setSelectedIndex(index);
   };
 
   const closeModal = () => {
-    setSelectedImage(null);
+    setSelectedIndex(null);
   };
 
   const navigateImage = (direction: 'prev' | 'next') => {
-    if (selectedImage === null) return;
+    if (selectedIndex === null) return;
 
-    const currentIndex = portfolioImages.findIndex(img => img.id === selectedImage);
-    let newIndex;
+    const lastIndex = portfolioImages.length - 1;
+    const nextIndex =
+      direction === 'next'
+        ? selectedIndex === lastIndex
+          ? 0
+          : selectedIndex + 1
+        : selectedIndex === 0
+          ? lastIndex
+          : selectedIndex - 1;
 
-    if (direction === 'next') {
-      newIndex = currentIndex < portfolioImages.length - 1 ? currentIndex + 1 : 0;
-    } else {
-      newIndex = currentIndex > 0 ? currentIndex - 1 : portfolioImages.length - 1;
-    }
-    setSelectedImage(portfolioImages[newIndex].id);
+    setSelectedIndex(nextIndex);
   };
 
-  const selectedImageData = portfolioImages.find(img => img.id === selectedImage);
+  const selectedImageData = selectedIndex !== null ? portfolioImages[selectedIndex] : undefined;
 
   return (
     <>
-      <section className="py-6 sm:py-12 lg:py-20 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        {/* Responsive Grid with Masonry Effect */}
+      <section className="py-10 sm:py-16 lg:py-20 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="mb-8 flex items-center justify-between gap-4">
+          <h2 className="text-lg sm:text-xl font-semibold tracking-tight text-foreground">
+            Visual Highlights
+          </h2>
+          <p className="text-xs sm:text-sm text-muted-foreground">
+            Moments from projects, events, and daily creativity
+          </p>
+        </div>
         <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 auto-rows-[minmax(150px,_1fr)] md:auto-rows-[minmax(200px,_1fr)] lg:auto-rows-[minmax(250px,_1fr)]">
-          {portfolioImages.map(image => (
-            <div
+          {portfolioImages.map((image, index) => (
+            <button
               key={image.id}
+              type="button"
               className={`
                 relative cursor-pointer overflow-hidden rounded-2xl sm:rounded-3xl
                 shadow-lg transition-transform duration-300
                 ${image.mobileSpan} ${image.tabletSpan} ${image.desktopSpan}
                 hover:scale-[1.02]
               `}
-              onClick={() => openModal(image.id)}
+              onClick={() => openModal(index)}
             >
               <Image
                 src={image.src || '/placeholder.svg'}
@@ -114,20 +122,22 @@ export default function Component() {
                 fill
                 className="object-cover transition-transform duration-300 hover:scale-105 hover:brightness-105"
               />
-            </div>
+            </button>
           ))}
         </div>
       </section>
 
       {/* Simple Lightbox Modal with Navigation */}
-      {selectedImage && selectedImageData && (
-        <div
+      {selectedIndex !== null && selectedImageData && (
+        <button
+          type="button"
           className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
           onClick={closeModal}
         >
           <div className="relative w-full h-full flex items-center justify-center">
             {/* Close Button */}
             <button
+              type="button"
               onClick={e => {
                 e.stopPropagation();
                 closeModal();
@@ -139,6 +149,7 @@ export default function Component() {
 
             {/* Previous Button */}
             <button
+              type="button"
               onClick={e => {
                 e.stopPropagation();
                 navigateImage('prev');
@@ -150,6 +161,7 @@ export default function Component() {
 
             {/* Next Button */}
             <button
+              type="button"
               onClick={e => {
                 e.stopPropagation();
                 navigateImage('next');
@@ -173,12 +185,11 @@ export default function Component() {
             {/* Simple Counter */}
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/10 rounded-full px-3 py-1">
               <span className="text-white text-sm">
-                {portfolioImages.findIndex(img => img.id === selectedImage) + 1} /{' '}
-                {portfolioImages.length}
+                {selectedIndex + 1} / {portfolioImages.length}
               </span>
             </div>
           </div>
-        </div>
+        </button>
       )}
     </>
   );
