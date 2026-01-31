@@ -1,9 +1,8 @@
 'use client';
 
-import Link from 'next/link';
-import { SiGithub, SiTelegram, SiLinkedin } from 'react-icons/si';
-import { Sun, Moon } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Clock, Moon, Sun } from 'lucide-react';
+import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 
@@ -16,24 +15,6 @@ export default function Navbar() {
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  const socials = [
-    {
-      Link: 'https://www.linkedin.com/in/sok-tityapong-2194802b6/',
-      label: 'Linkedin',
-      icon: SiLinkedin,
-    },
-    {
-      Link: 'https://github.com/Tityapong',
-      label: 'Github',
-      icon: SiGithub,
-    },
-    {
-      Link: 'https://t.me/Tityapong',
-      label: 'Telegram',
-      icon: SiTelegram,
-    },
-  ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -111,35 +92,43 @@ export default function Navbar() {
           initial="hidden"
           animate="visible"
         >
-          {/* Social Icons */}
-          {socials.map(social => {
-            const Icon = social.icon;
-            return (
-              <motion.div key={social.label} variants={itemVariants}>
-                <Link
-                  href={social.Link}
-                  aria-label={social.label}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.2 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300"
-                  >
-                    <Icon className="w-5 h-5" />
-                  </motion.div>
-                </Link>
-              </motion.div>
-            );
-          })}
-
           {cambodiaTime && (
-            <motion.div variants={itemVariants} className="hidden sm:flex flex-col items-end px-2">
-              <span className="text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500">
+            <motion.div
+              variants={itemVariants}
+              className="hidden sm:flex items-center gap-2 rounded-full border border-gray-200/70 dark:border-gray-700/70 bg-white/70 dark:bg-gray-900/50 px-3 py-1.5 backdrop-blur-md shadow-sm"
+            >
+              <span className="flex items-center gap-1.5">
+                <motion.span
+                  className="relative flex h-2 w-2"
+                  animate={{
+                    scale: [1, 1.25, 1],
+                    opacity: [0.8, 1, 0.8],
+                  }}
+                  transition={{
+                    duration: 1.6,
+                    repeat: Number.POSITIVE_INFINITY,
+                    ease: 'easeInOut',
+                  }}
+                >
+                  <span className="absolute inset-0 rounded-full bg-emerald-500/40" />
+                  <span className="absolute inset-0 rounded-full bg-emerald-500" />
+                </motion.span>
+                <Clock className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+              </span>
+              <span className="overflow-hidden rounded-sm ring-1 ring-black/10 dark:ring-white/10">
+                <Image
+                  src="/Flag_of_Cambodia.svg"
+                  alt="Cambodia flag"
+                  width={18}
+                  height={12}
+                  className="h-3 w-[18px] object-cover"
+                />
+              </span>
+              <span className="text-[11px] font-medium tracking-wide text-gray-600 dark:text-gray-300">
                 Phnom Penh
               </span>
-              <span className="text-xs font-semibold text-gray-800 dark:text-gray-100">
+              <span className="h-4 w-px bg-gray-200/70 dark:bg-gray-700/70" />
+              <span className="text-xs font-semibold tabular-nums font-mono text-gray-900 dark:text-gray-100">
                 {cambodiaTime}
               </span>
             </motion.div>

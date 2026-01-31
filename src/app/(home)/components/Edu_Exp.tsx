@@ -1,10 +1,10 @@
 'use client';
 
+import { Calendar, ExternalLink } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 import type React from 'react';
 import Title from './Tittle';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Calendar, ExternalLink } from 'lucide-react';
 
 interface Experience {
   company: string;
@@ -91,6 +91,14 @@ const education: Education[] = [
     endDate: 'Present',
     url: 'https://www.fe.rupp.edu.kh/',
   },
+    {
+    institution: 'Sala Cyber',
+    logo: '/salacyber_logo.png',
+    degree: 'DevOps Course',
+    startDate: 'Dec 2025',
+    endDate: 'Present',
+    url: 'https://www.salacyber.com/',
+  },
   {
     institution: 'ANT Technology Training Center',
     logo: '/ant.png',
@@ -141,13 +149,13 @@ const ExperienceCard = ({ experience }: ExperienceCardProps) => (
   <CardWrapper url={experience.url}>
     <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
       <div className="flex items-start gap-4 flex-1">
-        <div className="relative h-12 w-12 overflow-hidden rounded-xl border border-border/60 bg-muted/30 flex-shrink-0">
+        <div className="relative h-12 w-12 overflow-hidden rounded-xl p-1 flex items-center justify-center flex-shrink-0">
           <Image
             src={experience.logo || '/placeholder.svg?height=48&width=48'}
             alt={`${experience.company} logo`}
-            width={48}
-            height={48}
-            className="object-cover rounded-xl"
+            width={40}
+            height={40}
+            className="object-contain rounded-lg"
           />
         </div>
         <div className="flex-1 min-w-0">
@@ -189,13 +197,13 @@ const EducationCard = ({ education }: EducationCardProps) => (
   <CardWrapper url={education.url}>
     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
       <div className="flex items-start gap-4 flex-1">
-        <div className="relative h-12 w-12 overflow-hidden rounded-xl border border-border/60 bg-muted/30 flex-shrink-0">
+        <div className="relative h-12 w-12 overflow-hidden rounded-xl bg-white p-1 flex items-center justify-center flex-shrink-0">
           <Image
             src={education.logo || '/placeholder.svg?height=48&width=48'}
             alt={`${education.institution} logo`}
-            width={48}
-            height={48}
-            className="object-cover rounded-xl"
+            width={40}
+            height={40}
+            className="object-contain rounded-lg"
           />
         </div>
         <div className="flex-1 min-w-0">

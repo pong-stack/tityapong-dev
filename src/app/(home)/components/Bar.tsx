@@ -63,6 +63,7 @@ function ModeToggle() {
 
   return (
     <button
+      type="button"
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
       className={cn(buttonVariants({ variant: 'ghost', size: 'icon' }), 'size-12')}
       aria-label="Toggle theme"
