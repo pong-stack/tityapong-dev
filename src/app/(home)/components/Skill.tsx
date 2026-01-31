@@ -8,6 +8,7 @@ import {
   SiExpress,
   SiPostman,
   SiMysql,
+  SiPostgresql,
   SiGit,
   SiGithub,
   SiFigma,
@@ -17,6 +18,10 @@ import {
   SiPhp,
   SiLaravel,
   SiNestjs,
+  SiDocker,
+  SiJenkins,
+  SiAnsible,
+  SiKubernetes,
 } from 'react-icons/si';
 import { TbApi } from 'react-icons/tb';
 import Title from './Tittle';
@@ -51,7 +56,10 @@ const skillCategories = [
   },
   {
     category: 'Database',
-    skills: [{ name: 'MySQL', icon: SiMysql, color: '#4479A1' }],
+    skills: [
+      { name: 'MySQL', icon: SiMysql, color: '#4479A1' },
+      { name: 'PostgreSQL', icon: SiPostgresql, color: '#336791' },
+    ],
   },
   {
     category: 'Version Control',
@@ -67,6 +75,10 @@ const skillCategories = [
       { name: 'Vercel', icon: SiVercel, color: '#FFFFFF' },
       { name: 'Render', icon: SiRender, color: '#46E3B7' },
       { name: 'Railway', icon: SiRailway, color: '#FFFFFF' },
+      { name: 'Docker', icon: SiDocker, color: '#2496ED' },
+      { name: 'Jenkins', icon: SiJenkins, color: '#D24939' },
+      { name: 'Ansible', icon: SiAnsible, color: '#EE0000' },
+      { name: 'Kubernetes', icon: SiKubernetes, color: '#326CE5' },
     ],
   },
 ];

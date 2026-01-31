@@ -27,6 +27,19 @@ interface Education {
 
 const experiences: Experience[] = [
   {
+    company: 'General Department of State Property and Non-Tax Revenue at MEF',
+    logo: '/mef_logo.png',
+    role: 'Developer',
+    startDate: 'Sep 2025',
+    endDate: 'Present',
+    description: [
+      'Collaborated with cross-functional teams to develop and maintain user-friendly and responsive UI/UX.',
+      'Participated in technical discussions to translate Business Logic into frontend workflows.',
+      'Implemented and integrated RESTful APIs based on backend specifications and Business Logic.',
+      'Worked closely with the backend team to ensure smooth data flow, validation, and system integration.',
+    ],
+  },
+  {
     company: 'Cotafer Co., Ltd',
     logo: '/cotafer_logo.jpeg',
     role: 'Web Developer',
@@ -42,7 +55,7 @@ const experiences: Experience[] = [
   {
     company: 'Event Appointment',
     logo: '/logoevent.png',
-    role: 'Web Developer',
+    role: 'Full Stack Developer',
     startDate: 'Aug 2024',
     endDate: 'Dec 2024',
     description: [
