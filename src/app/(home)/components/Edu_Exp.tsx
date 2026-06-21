@@ -1,10 +1,11 @@
 'use client';
 
-import { Calendar, ExternalLink } from 'lucide-react';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { Calendar, ExternalLink, Briefcase, GraduationCap, ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRef, useState } from 'react';
 import type React from 'react';
-import Title from './Tittle';
 
 interface Experience {
   company: string;
@@ -14,6 +15,7 @@ interface Experience {
   endDate: string;
   description: string[];
   url?: string;
+  isCurrent?: boolean;
 }
 
 interface Education {
@@ -23,15 +25,17 @@ interface Education {
   startDate: string;
   endDate: string;
   url?: string;
+  isCurrent?: boolean;
 }
 
 const experiences: Experience[] = [
   {
-    company: 'General Department of State Property and Non-Tax Revenue at MEF',
+    company: 'Ministry of Economy and Finance',
     logo: '/mef_logo.png',
     role: 'Developer',
     startDate: 'Sep 2025',
     endDate: 'Present',
+    isCurrent: true,
     description: [
       'Collaborated with cross-functional teams to develop and maintain user-friendly and responsive UI/UX.',
       'Participated in technical discussions to translate Business Logic into frontend workflows.',
@@ -44,41 +48,13 @@ const experiences: Experience[] = [
     logo: '/cotafer_logo.jpeg',
     role: 'Web Developer',
     startDate: 'Mar 2025',
-    endDate: 'Jun 2025',
+    endDate: 'Aug 2025',
     description: [
       'Wrote and tested Vue.js components to ensure correct functionality',
       'Reviewed and debugged code to maintain high code quality and performance',
       'Ensured maintainability by following clean code practices and component reusability',
     ],
     url: 'https://www.cotafer.group/',
-  },
-  {
-    company: 'Event Appointment',
-    logo: '/logoevent.png',
-    role: 'Full Stack Developer',
-    startDate: 'Aug 2024',
-    endDate: 'Dec 2024',
-    description: [
-      'Developed responsive frontend components using Next.js and Tailwind CSS',
-      'Built RESTful APIs with Express.js for event creation, booking, and authentication',
-      'Implemented JWT authentication and integrated MySQL for secure data handling',
-      'Collaborated in an Agile team, following clean code practices and using Git for version control',
-    ],
-  },
-  {
-    company: 'ANT Training Center - MPTC',
-    logo: '/ant.png',
-    role: 'Web Development Training (Full Scholarship)',
-    startDate: 'Jan 2024',
-    endDate: 'Mar 2025',
-    description: [
-      'Built real-world Node.js APIs with MySQL and Postman',
-      'Applied MVC architecture and followed clean code principles',
-      'Gained hands-on experience with Git, version control, and Agile teamwork',
-      'Developed reusable modules and participated in code reviews',
-      'Integrated frontend applications with backend APIs',
-    ],
-    url: 'https://antkh.com/',
   },
 ];
 
@@ -88,15 +64,17 @@ const education: Education[] = [
     logo: '/rupp.jpeg',
     degree: 'Bachelor of Information Technology Engineering',
     startDate: 'Mar 2022',
-    endDate: 'Present',
+    endDate: '2026',
+    isCurrent: false,
     url: 'https://www.fe.rupp.edu.kh/',
   },
-    {
+  {
     institution: 'Sala Cyber',
-    logo: '/salacyber_logo.png',
+    logo: '/salacyber.png',
     degree: 'DevOps Course',
     startDate: 'Dec 2025',
-    endDate: 'Present',
+    endDate: 'Mar 2026',
+    isCurrent: false,
     url: 'https://www.salacyber.com/',
   },
   {
@@ -109,144 +87,339 @@ const education: Education[] = [
   },
 ];
 
-interface CardWrapperProps {
-  children: React.ReactNode;
-  url?: string;
-}
-
-const CardWrapper = ({ children, url }: CardWrapperProps) => {
-  const content = (
-    <div className="group relative overflow-hidden rounded-2xl border border-border/60 bg-background/70 p-6 shadow-sm ring-1 ring-black/5 backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg dark:ring-white/10">
-      <div className="relative z-10">
-        {children}
-        {url && (
-          <div className="mt-6 flex justify-end">
-            <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-300">
-              <span>Visit Website</span>
-              <ExternalLink className="w-4 h-4" />
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-
-  if (url) {
-    return (
-      <Link href={url} target="_blank" rel="noopener noreferrer" className="block">
-        {content}
-      </Link>
-    );
-  }
-  return content;
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
 };
 
-interface ExperienceCardProps {
-  experience: Experience;
+const itemVariants = {
+  hidden: { opacity: 0, x: -24 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } },
+};
+
+function SectionTitle({ icon, text }: { icon: React.ReactNode; text: string }) {
+  return (
+    <div className="flex items-center gap-3 mb-10">
+      <div
+        className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+        style={{ background: 'rgba(56,189,248,0.10)', border: '1px solid rgba(56,189,248,0.2)' }}
+      >
+        {icon}
+      </div>
+      <h2 className="text-2xl font-bold text-[var(--text-primary)]">{text}</h2>
+    </div>
+  );
 }
 
-const ExperienceCard = ({ experience }: ExperienceCardProps) => (
-  <CardWrapper url={experience.url}>
-    <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-      <div className="flex items-start gap-4 flex-1">
-        <div className="relative h-12 w-12 overflow-hidden rounded-xl p-1 flex items-center justify-center flex-shrink-0">
-          <Image
-            src={experience.logo || '/placeholder.svg?height=48&width=48'}
-            alt={`${experience.company} logo`}
-            width={40}
-            height={40}
-            className="object-contain rounded-lg"
-          />
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
-            <div className="space-y-2">
-              <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                {experience.company}
-              </h2>
-              <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
-                {experience.role}
-              </span>
+function TimelineItem({
+  logo,
+  title,
+  subtitle,
+  dateRange,
+  bullets,
+  url,
+  isCurrent,
+  isLast,
+}: {
+  logo: string;
+  title: string;
+  subtitle: string;
+  dateRange: string;
+  bullets: string[];
+  url?: string;
+  isCurrent?: boolean;
+  isLast?: boolean;
+}) {
+
+  // ── Mobile card (shown below lg) — collapsible ──────────────────────────
+  function MobileCard() {
+    const [open, setOpen] = useState(false);
+    const hasBullets = bullets.length > 0;
+
+    const card = (
+      <motion.div
+        variants={itemVariants}
+        className="lg:hidden rounded-2xl mb-3 overflow-hidden"
+        style={{
+          background: 'var(--bg-glass)',
+          border: '1px solid var(--border-subtle)',
+          backdropFilter: 'blur(16px)',
+        }}
+      >
+        {/* Header row — always visible, tappable */}
+        <button
+          type="button"
+          className="w-full flex flex-col gap-3 p-4 text-left"
+          onClick={() => hasBullets && setOpen(o => !o)}
+        >
+          {/* Top: logo + name + role + chevron */}
+          <div className="flex items-center gap-3">
+            <div
+              className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
+              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+            >
+              <Image
+                src={logo || '/placeholder.svg'}
+                alt={title}
+                width={40}
+                height={40}
+                className="object-contain rounded-lg"
+              />
             </div>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/60 px-3 py-1 rounded-full">
-              <Calendar className="w-4 h-4" />
-              <span>
-                {experience.startDate} - {experience.endDate}
-              </span>
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-sm text-[var(--text-primary)] leading-tight">{title}</h3>
+              <p className="text-xs mt-0.5" style={{ color: '#38bdf8' }}>{subtitle}</p>
+            </div>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              {isCurrent && (
+                <span
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ background: '#34d399' }}
+                />
+              )}
+              {hasBullets && (
+                <motion.div
+                  animate={{ rotate: open ? 180 : 0 }}
+                  transition={{ duration: 0.25, ease: 'easeInOut' }}
+                >
+                  <ChevronDown className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
+                </motion.div>
+              )}
             </div>
           </div>
-          <div className="space-y-2">
-            {experience.description.map(desc => (
-              <div key={desc} className="flex items-start gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-primary/70 mt-2 flex-shrink-0" />
-                <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
+
+          {/* Date row */}
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-mono" style={{ color: 'var(--text-muted)' }}>
+              {dateRange}
+            </span>
+          </div>
+        </button>
+
+        {/* Collapsible body */}
+        <AnimatePresence initial={false}>
+          {open && (
+            <motion.div
+              key="body"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+              style={{ overflow: 'hidden' }}
+            >
+              <div
+                className="px-4 pb-4 space-y-2 pt-1"
+                style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
+              >
+                {bullets.map((b, i) => (
+                  <div key={i} className="flex items-start gap-2.5">
+                    <div
+                      className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0"
+                      style={{ background: '#38bdf8' }}
+                    />
+                    <p className="text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>{b}</p>
+                  </div>
+                ))}
+                {url && (
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs mt-2"
+                    style={{ color: '#38bdf8' }}
+                    onClick={e => e.stopPropagation()}
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                    Visit Website
+                  </a>
+                )}
               </div>
-            ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    );
+
+    return card;
+  }
+
+  // ── Desktop timeline (shown at lg+) ──────────────────────────────────────
+  const desktopItem = (
+    <motion.div
+      variants={itemVariants}
+      className="hidden lg:flex relative gap-5 pb-10"
+    >
+      {/* Timeline Line + Dot */}
+      <div className="relative flex flex-col items-center flex-shrink-0 w-10">
+        <div
+          className={`w-3 h-3 rounded-full mt-1.5 flex-shrink-0 z-10 ${isCurrent ? 'timeline-dot timeline-dot-active' : ''}`}
+          style={
+            isCurrent
+              ? {}
+              : {
+                background: 'rgba(56,189,248,0.5)',
+                border: '2px solid rgba(56,189,248,0.3)',
+              }
+          }
+        />
+        {!isLast && (
+          <div
+            className="flex-1 w-px mt-2"
+            style={{ background: 'linear-gradient(to bottom, rgba(56,189,248,0.35), rgba(56,189,248,0.05))' }}
+          />
+        )}
+      </div>
+
+      {/* Card */}
+      <div
+        className="flex-1 glass-card p-5 mb-0 group cursor-default"
+        style={{ borderRadius: '14px' }}
+      >
+        <div className="flex flex-col gap-4">
+          <div className="flex items-start justify-between gap-4">
+            {/* Logo + Title */}
+            <div className="flex items-start gap-3">
+              <div
+                className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
+                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+              >
+                <Image
+                  src={logo || '/placeholder.svg'}
+                  alt={title}
+                  width={36}
+                  height={36}
+                  className="object-contain rounded-lg"
+                />
+              </div>
+              <div>
+                <h3 className="font-semibold text-[var(--text-primary)] leading-tight">{title}</h3>
+                <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                  <span
+                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                    style={{ background: 'rgba(56,189,248,0.10)', color: '#38bdf8', border: '1px solid rgba(56,189,248,0.2)' }}
+                  >
+                    {subtitle}
+                  </span>
+                  {isCurrent && (
+                    <span
+                      className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium"
+                      style={{ background: 'rgba(52,211,153,0.1)', color: '#34d399', border: '1px solid rgba(52,211,153,0.2)' }}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
+                      Current
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Date */}
+            <div
+              className="flex items-center gap-1.5 px-3 py-1 rounded-full flex-shrink-0 text-xs"
+              style={{ background: 'rgba(255,255,255,0.04)', color: 'var(--text-muted)', border: '1px solid rgba(255,255,255,0.06)' }}
+            >
+              <Calendar className="w-3 h-3" />
+              <span className="whitespace-nowrap font-medium">{dateRange}</span>
+            </div>
           </div>
+
+          {/* Bullets */}
+          {bullets.length > 0 && (
+            <div className="space-y-2">
+              {bullets.map((b, i) => (
+                <div key={i} className="flex items-start gap-2.5">
+                  <div
+                    className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0"
+                    style={{ background: '#38bdf8' }}
+                  />
+                  <p className="text-sm text-[var(--text-muted)] leading-relaxed">{b}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Visit Link */}
+          {url && (
+            <div className="flex items-center gap-1.5 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ color: '#38bdf8' }}>
+              <ExternalLink className="w-3 h-3" />
+              <span>Visit Website</span>
+            </div>
+          )}
         </div>
       </div>
-    </div>
-  </CardWrapper>
-);
+    </motion.div>
+  );
 
-interface EducationCardProps {
-  education: Education;
+
+  return (
+    <>
+      <MobileCard />
+      {desktopItem}
+    </>
+  );
 }
 
-const EducationCard = ({ education }: EducationCardProps) => (
-  <CardWrapper url={education.url}>
-    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
-      <div className="flex items-start gap-4 flex-1">
-        <div className="relative h-12 w-12 overflow-hidden rounded-xl bg-white p-1 flex items-center justify-center flex-shrink-0">
-          <Image
-            src={education.logo || '/placeholder.svg?height=48&width=48'}
-            alt={`${education.institution} logo`}
-            width={40}
-            height={40}
-            className="object-contain rounded-lg"
-          />
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-            <div className="space-y-2">
-              <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                {education.institution}
-              </h2>
-              <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
-                {education.degree}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/60 px-3 py-1 rounded-full">
-              <Calendar className="w-4 h-4" />
-              <span>
-                {education.startDate} - {education.endDate}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </CardWrapper>
-);
 
 export default function Portfolio() {
+  const expRef = useRef(null);
+  const eduRef = useRef(null);
+  const expInView = useInView(expRef, { once: true, margin: '-80px' });
+  const eduInView = useInView(eduRef, { once: true, margin: '-80px' });
+
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16 space-y-16">
-      <section className="space-y-8">
-        <Title text="Experience" className="flex flex-col items-center justify-center" />
-        <div className="space-y-6">
-          {experiences.map(experience => (
-            <ExperienceCard key={experience.company} experience={experience} />
+    <div id="experience" className="section-wrapper">
+      {/* Experience */}
+      <section ref={expRef} className="mb-20">
+        <SectionTitle
+          icon={<Briefcase className="w-4 h-4" style={{ color: '#38bdf8' }} />}
+          text="Experience"
+        />
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate={expInView ? 'visible' : 'hidden'}
+        >
+          {experiences.map((exp, i) => (
+            <TimelineItem
+              key={exp.company}
+              logo={exp.logo}
+              title={exp.company}
+              subtitle={exp.role}
+              dateRange={`${exp.startDate} — ${exp.endDate}`}
+              bullets={exp.description}
+              url={exp.url}
+              isCurrent={exp.isCurrent}
+              isLast={i === experiences.length - 1}
+            />
           ))}
-        </div>
+        </motion.div>
       </section>
-      <section className="space-y-8">
-        <Title text="Education" className="flex flex-col items-center justify-center" />
-        <div className="space-y-6">
-          {education.map(edu => (
-            <EducationCard key={edu.institution} education={edu} />
+
+      {/* Education */}
+      <section ref={eduRef}>
+        <SectionTitle
+          icon={<GraduationCap className="w-4 h-4" style={{ color: '#38bdf8' }} />}
+          text="Education"
+        />
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate={eduInView ? 'visible' : 'hidden'}
+        >
+          {education.map((edu, i) => (
+            <TimelineItem
+              key={edu.institution}
+              logo={edu.logo}
+              title={edu.institution}
+              subtitle={edu.degree}
+              dateRange={`${edu.startDate} — ${edu.endDate}`}
+              bullets={[]}
+              url={edu.url}
+              isCurrent={edu.isCurrent}
+              isLast={i === education.length - 1}
+            />
           ))}
-        </div>
+        </motion.div>
       </section>
     </div>
   );

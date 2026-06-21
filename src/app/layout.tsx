@@ -5,7 +5,6 @@ import { Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 // import PageTransition from "@/components/page-transition";
-import DockBar from './(home)/components/Bar';
 import { Analytics } from '@vercel/analytics/next';
 
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'] });
@@ -106,7 +105,6 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
           disableTransitionOnChange
         >
           {children}
-          <DockBar />
           <Analytics />
         </ThemeProvider>
       </body>

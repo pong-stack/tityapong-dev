@@ -1,51 +1,27 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import {Moon, Sun } from 'lucide-react';
 import Image from 'next/image';
-import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 
 export default function Navbar() {
-  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [cambodiaTime, setCambodiaTime] = useState('');
+  const [scrolled, setScrolled] = useState(false);
 
-  // Avoid hydration mismatch
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: -20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: 'spring',
-        stiffness: 300,
-        damping: 24,
-      },
-    },
-  };
-
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
-  };
+  // Scroll-aware shadow
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     if (!mounted) return;
-
     const updateTime = () => {
       const now = new Date();
       const timeString = now.toLocaleTimeString('en-US', {
@@ -57,65 +33,71 @@ export default function Navbar() {
       });
       setCambodiaTime(timeString);
     };
-
     updateTime();
     const intervalId = setInterval(updateTime, 1000);
-
     return () => clearInterval(intervalId);
   }, [mounted]);
 
-  if (!mounted) {
-    return null;
-  }
+  if (!mounted) return null;
 
   return (
-    <div className="w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 transition-colors duration-300">
+    <div
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
+      style={{
+        background: scrolled
+          ? 'rgba(7, 7, 14, 0.85)'
+          : 'transparent',
+        backdropFilter: scrolled ? 'blur(20px)' : 'none',
+        WebkitBackdropFilter: scrolled ? 'blur(20px)' : 'none',
+        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.05)' : '1px solid transparent',
+        boxShadow: scrolled ? '0 4px 30px rgba(0,0,0,0.5)' : 'none',
+      }}
+    >
       <motion.nav
-        className="py-6 flex justify-between items-center max-w-7xl mx-auto px-4"
-        initial={{ opacity: 0, y: -50 }}
+        className="flex justify-between items-center max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-4"
+        initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
-        {/* Logo/Name */}
-        <motion.h1
-          className="text-xl md:text-2xl font-bold underline underline-offset-8 decoration-blue-600 dark:decoration-blue-400 -rotate-1 text-gray-900 dark:text-white transition-colors duration-300"
-          whileHover={{ scale: 1.05, rotate: 0 }}
-          whileTap={{ scale: 0.95 }}
+        {/* Logo */}
+        <motion.a
+          href="/"
+          className="relative group"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.97 }}
         >
-          Sok_Tityapong
-        </motion.h1>
+          <span className="font-bold text-lg tracking-tight text-[var(--text-primary)] font-mono">
+            Sok_<span className="gradient-text-violet">Tityapong</span>
+          </span>
+          <span
+            className="absolute -bottom-0.5 left-0 h-px w-0 group-hover:w-full transition-all duration-300"
+            style={{ background: 'linear-gradient(90deg, var(--accent-violet), var(--accent-cyan))' }}
+          />
+        </motion.a>
 
-        {/* Social Links and Theme Toggle */}
-        <motion.div
-          className="flex items-center space-x-1"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
+        {/* Right: Time Badge only */}
+        <div className="flex items-center gap-2">
+          {/* Time Badge */}
           {cambodiaTime && (
             <motion.div
-              variants={itemVariants}
-              className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-gray-200/70 dark:border-gray-700/70 bg-white/70 dark:bg-gray-900/50 px-2.5 sm:px-3 py-1.5 backdrop-blur-md shadow-sm"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full"
+              style={{
+                background: 'var(--bg-glass)',
+                border: '1px solid var(--border-subtle)',
+                backdropFilter: 'blur(12px)',
+              }}
             >
-              <span className="flex items-center gap-1.5">
-                <motion.span
-                  className="relative flex h-2 w-2"
-                  animate={{
-                    scale: [1, 1.25, 1],
-                    opacity: [0.8, 1, 0.8],
-                  }}
-                  transition={{
-                    duration: 1.6,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: 'easeInOut',
-                  }}
-                >
-                  <span className="absolute inset-0 rounded-full bg-emerald-500/40" />
-                  <span className="absolute inset-0 rounded-full bg-emerald-500" />
-                </motion.span>
-
+              {/* Pulse dot */}
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
               </span>
-              <span className="overflow-hidden rounded-sm ring-1 ring-black/10 dark:ring-white/10">
+
+              {/* Flag */}
+              <span className="overflow-hidden rounded-sm ring-1 ring-white/10">
                 <Image
                   src="/Flag_of_Cambodia.svg"
                   alt="Cambodia flag"
@@ -124,33 +106,19 @@ export default function Navbar() {
                   className="h-3 w-[18px] object-cover"
                 />
               </span>
-              <span className="hidden md:inline text-[11px] font-medium tracking-wide text-gray-600 dark:text-gray-300">
+
+              <span className="hidden sm:block text-[11px] font-medium text-[var(--text-muted)] tracking-wide">
                 Phnom Penh
               </span>
-              <span className="hidden md:block h-4 w-px bg-gray-200/70 dark:bg-gray-700/70" />
-              <span className="text-xs font-semibold tabular-nums font-mono text-gray-900 dark:text-gray-100">
+
+              <div className="hidden sm:block h-3.5 w-px bg-white/10" />
+
+              <span className="text-xs font-semibold tabular-nums font-mono text-[var(--text-primary)]">
                 {cambodiaTime}
               </span>
             </motion.div>
           )}
-
-          {/* Theme Toggle Button */}
-          <motion.div variants={itemVariants}>
-            <motion.button
-              onClick={toggleTheme}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 shadow-sm"
-              aria-label="Toggle theme"
-            >
-              {theme === 'dark' ? (
-                <Sun className="w-5 h-5 text-yellow-500" />
-              ) : (
-                <Moon className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-              )}
-            </motion.button>
-          </motion.div>
-        </motion.div>
+        </div>
       </motion.nav>
     </div>
   );
