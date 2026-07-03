@@ -89,7 +89,7 @@ export default function Skill() {
         <h2 className="text-2xl font-bold text-[var(--text-primary)]">Tech Stack</h2>
       </div>
       <p className="text-[var(--text-muted)] text-sm mb-10">
-        Technologies I work with across the full stack.
+        Technologies I work with across the full stack as a Next.js Developer and React Developer. Specializing in TypeScript, Node.js, and databases to build high-performance, responsive web systems in Phnom Penh, Cambodia.
       </p>
 
       {/* Pill Grid */}

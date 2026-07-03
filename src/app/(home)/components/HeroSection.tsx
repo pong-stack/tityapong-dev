@@ -5,37 +5,39 @@ import { motion } from 'framer-motion';
 import { MapPin, ArrowDown, Github, Linkedin, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 
-const roles = ['Full Stack Developer'];
+const roles = ['Full Stack Developer', 'Next.js Developer', 'React Developer'];
 
 export default function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
+  const [roleIndex, setRoleIndex] = useState(0);
   const [displayText, setDisplayText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [charIndex, setCharIndex] = useState(0);
 
   // Typewriter effect
   useEffect(() => {
-    const role = roles[0];
-    const speed = isDeleting ? 40 : 70;
+    const currentRole = roles[roleIndex];
+    const speed = isDeleting ? 30 : 60;
 
     const timer = setTimeout(() => {
       if (!isDeleting) {
-        setDisplayText(role.slice(0, charIndex + 1));
+        setDisplayText(currentRole.slice(0, charIndex + 1));
         setCharIndex(c => c + 1);
-        if (charIndex + 1 === role.length) {
-          setTimeout(() => setIsDeleting(true), 2400);
+        if (charIndex + 1 === currentRole.length) {
+          setTimeout(() => setIsDeleting(true), 2000);
         }
       } else {
-        setDisplayText(role.slice(0, charIndex - 1));
+        setDisplayText(currentRole.slice(0, charIndex - 1));
         setCharIndex(c => c - 1);
         if (charIndex - 1 === 0) {
           setIsDeleting(false);
+          setRoleIndex((roleIndex + 1) % roles.length);
         }
       }
     }, speed);
 
     return () => clearTimeout(timer);
-  }, [charIndex, isDeleting]);
+  }, [charIndex, isDeleting, roleIndex]);
 
   const containerVariants = {
     hidden: {},
@@ -81,9 +83,9 @@ export default function Hero() {
             {/* Mobile Header: Name & Profile Photo side-by-side */}
             <div className="flex lg:hidden items-center justify-between gap-4 w-full">
               <div className="space-y-1">
-                <h1 className="text-3xl font-bold tracking-tight text-white leading-tight">
+                <p className="text-3xl font-bold tracking-tight text-white leading-tight">
                   Sok Tityapong
-                </h1>
+                </p>
                 <p className="text-lg font-semibold leading-snug" style={{ color: '#38bdf8' }}>
                   Full Stack <br /> Developer
                 </p>
@@ -93,6 +95,7 @@ export default function Hero() {
                   src="/Tityapong_PV.png"
                   alt="Sok Tityapong"
                   fill
+                  sizes="(max-width: 768px) 96px, 96px"
                   className="object-cover object-top"
                   priority
                 />
@@ -169,8 +172,7 @@ export default function Hero() {
             >
               IT Engineering student at{' '}
               <span className="text-[var(--text-primary)] font-medium">Royal University of Phnom Penh</span>{' '}
-              crafting elegant digital experiences with modern web technologies.
-              Passionate about clean code, great design, and building things that matter.
+              specializing in Full Stack Web Development. Sok Tityapong is an aspiring Next.js Developer based in Phnom Penh, Cambodia, crafting fast and search-optimized web applications.
             </motion.p>
 
             {/* Stats Row */}
@@ -266,6 +268,7 @@ function ProfilePhoto() {
           src="/Tityapong_PV.png"
           alt="Sok Tityapong"
           fill
+          sizes="(max-width: 1200px) 320px, 320px"
           className="object-cover object-top"
           priority
         />

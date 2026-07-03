@@ -83,15 +83,13 @@ export default function NotFound() {
           }`}
         >
           <Button
-            asChild
             className="flex-1 rounded-full border-primary/20 hover:bg-primary/5 transition-all duration-300"
             variant="outline"
             size="lg"
+            onClick={() => window.history.back()}
           >
-            <Link href="javascript:history.back()">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Go Back
-            </Link>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Go Back
           </Button>
 
           <Button

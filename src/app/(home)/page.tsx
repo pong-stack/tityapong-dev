@@ -1,11 +1,28 @@
+import type { Metadata } from 'next';
 import Navbar from './components/Navbar';
 import Hero from './components/HeroSection';
+import AboutSection from './components/AboutSection';
 import Resume from './components/Edu_Exp';
 import Skill from './components/Skill';
 import Projects from './components/Projects';
 import GalleryComponent from './components/portfolio-gallery';
 import AchievementsSection from './components/AchievementsSection';
-import Footer from './components/ Footer';
+import Footer from './components/Footer';
+
+export const metadata: Metadata = {
+  title: 'Sok Tityapong | Full Stack Developer Cambodia',
+  description:
+    'Official portfolio of Sok Tityapong, a professional Full Stack Developer and Next.js specialist based in Phnom Penh, Cambodia. Discover custom web development projects, skills, and achievements.',
+  alternates: {
+    canonical: 'https://tityapong-dev.vercel.app',
+  },
+  openGraph: {
+    title: 'Sok Tityapong | Full Stack Developer Cambodia',
+    description:
+      'Official portfolio of Sok Tityapong, a professional Full Stack Developer based in Phnom Penh, Cambodia. Specializing in TypeScript, Next.js, React, Node.js, and modern databases.',
+    url: 'https://tityapong-dev.vercel.app',
+  },
+};
 
 export default function page() {
   return (
@@ -20,6 +37,9 @@ export default function page() {
 
       {/* Main content */}
       <main>
+        {/* About Section */}
+        <AboutSection />
+
         {/* Experience & Education Timeline */}
         <Resume />
 
@@ -40,3 +60,4 @@ export default function page() {
     </div>
   );
 }
+

@@ -12,25 +12,30 @@ const spaceGrotesk = Space_Grotesk({ subsets: ['latin'] });
 export const metadata: Metadata = {
   metadataBase: new URL('https://tityapong-dev.vercel.app'),
   title: {
-    default: 'Sok Tityapong | Web Developer Portfolio',
+    default: 'Sok Tityapong | Full Stack Developer Cambodia',
     template: '%s | Sok Tityapong',
   },
   description:
-    'Portfolio of Sok Tityapong, a skilled web developer specializing in TypeScript, Next.js, and React. Explore modern, responsive web projects.',
+    'Portfolio of Sok Tityapong, a professional Full Stack Developer based in Phnom Penh, Cambodia. Specializing in TypeScript, Next.js, React, Node.js, and PostgreSQL.',
   keywords: [
     'Sok Tityapong',
-    'web developer',
-    'TypeScript developer',
-    'Next.js portfolio',
-    'React developer',
-    'frontend developer',
+    'Tityapong',
+    'Sok Tityapong developer',
+    'Tityapong full stack developer',
+    'Sok Tityapong Cambodia',
+    'Full Stack Developer Cambodia',
+    'Next.js Developer Cambodia',
+    'React Developer Cambodia',
+    'Phnom Penh',
+    'IT Engineering student RUPP',
+    'web developer portfolio',
     'responsive web design',
   ],
   authors: [{ name: 'Sok Tityapong', url: 'https://tityapong-dev.vercel.app' }],
   openGraph: {
-    title: 'Sok Tityapong | Web Developer Portfolio',
+    title: 'Sok Tityapong | Full Stack Developer Cambodia',
     description:
-      "Discover Sok Tityapong's portfolio, showcasing expertise in TypeScript, Next.js, and React.",
+      "Explore the portfolio of Sok Tityapong, a Full Stack Web Developer from Cambodia showcasing modern projects in Next.js and React.",
     url: 'https://tityapong-dev.vercel.app',
     siteName: 'Sok Tityapong Portfolio',
     images: [
@@ -38,7 +43,7 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Sok Tityapong Web Developer Portfolio',
+        alt: 'Sok Tityapong Full Stack Developer Cambodia Portfolio',
       },
     ],
     locale: 'en_US',
@@ -46,9 +51,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Sok Tityapong | Web Developer Portfolio',
+    title: 'Sok Tityapong | Full Stack Developer Cambodia',
     description:
-      'Explore the portfolio of Sok Tityapong, featuring TypeScript and Next.js projects for modern, responsive web applications.',
+      'Explore the portfolio of Sok Tityapong, featuring full stack projects in Next.js and React for responsive applications.',
     images: ['/og-image.png'],
     creator: '@SokTityapong',
   },
@@ -75,17 +80,43 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: 'Sok Tityapong',
-    jobTitle: 'Web Developer',
-    url: 'https://tityapong-dev.vercel.app',
-    sameAs: [
-      'https://linkedin.com/in/sok-tityapong',
-      'https://github.com/sok-tityapong',
-      'https://twitter.com/SokTityapong',
+    '@graph': [
+      {
+        '@type': 'Person',
+        '@id': 'https://tityapong-dev.vercel.app/#person',
+        name: 'Sok Tityapong',
+        jobTitle: 'Full Stack Developer',
+        url: 'https://tityapong-dev.vercel.app',
+        sameAs: [
+          'https://github.com/Tityapong',
+          'https://www.linkedin.com/in/sok-tityapong-2194802b6/',
+          'https://t.me/Tityapong',
+        ],
+        image: 'https://tityapong-dev.vercel.app/Tityapong_PV.png',
+        description:
+          'Sok Tityapong is a Full Stack Developer and IT Engineering student at the Royal University of Phnom Penh based in Cambodia, specializing in Next.js, React, TypeScript, and Node.js.',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Phnom Penh',
+          addressCountry: 'Cambodia',
+        },
+        alumniOf: {
+          '@type': 'EducationalOrganization',
+          name: 'Royal University of Phnom Penh',
+        },
+      },
+      {
+        '@type': 'WebSite',
+        '@id': 'https://tityapong-dev.vercel.app/#website',
+        url: 'https://tityapong-dev.vercel.app',
+        name: 'Sok Tityapong Portfolio',
+        description:
+          'Developer portfolio of Sok Tityapong, Full Stack Web Developer and Next.js specialist based in Cambodia.',
+        publisher: {
+          '@id': 'https://tityapong-dev.vercel.app/#person',
+        },
+      },
     ],
-    description:
-      'Sok Tityapong is a web developer specializing in TypeScript, Next.js, and React, building responsive and user-friendly applications.',
   };
 
   return (
