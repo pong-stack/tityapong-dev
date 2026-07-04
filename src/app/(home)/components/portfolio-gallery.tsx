@@ -6,13 +6,14 @@ import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, Images } from 'lucide-react';
 
 const portfolioImages = [
-  { id: 1, src: '/graduated.jpg', alt: 'Architecture Building', mobileSpan: 'row-span-2', tabletSpan: 'md:row-span-2', desktopSpan: 'lg:row-span-2' },
-  { id: 2, src: '/g2.jpg', alt: 'Fresh Strawberries', mobileSpan: 'row-span-1', tabletSpan: 'md:row-span-1', desktopSpan: 'lg:row-span-2' },
-  { id: 3, src: '/g8.jpg', alt: 'Dark Rose', mobileSpan: 'row-span-2', tabletSpan: 'md:row-span-2', desktopSpan: 'lg:row-span-1' },
-  { id: 4, src: '/g4.jpg', alt: 'Workspace Setup', mobileSpan: 'row-span-1', tabletSpan: 'md:row-span-1', desktopSpan: 'lg:row-span-2' },
-  { id: 5, src: '/g5.jpg', alt: 'Abstract Dark', mobileSpan: 'row-span-2', tabletSpan: 'md:row-span-2', desktopSpan: 'lg:row-span-1' },
-  { id: 6, src: '/g6.jpg', alt: 'City Lights Bokeh', mobileSpan: 'row-span-1', tabletSpan: 'md:row-span-1', desktopSpan: 'lg:row-span-2' },
-  { id: 7, src: '/g7.jpg', alt: 'City Lights', mobileSpan: 'row-span-1', tabletSpan: 'md:row-span-1', desktopSpan: 'lg:row-span-2' },
+  { id: 1, src: '/graduated.jpg', alt: 'Sok Tityapong graduation day at the Royal University of Phnom Penh RUPP', mobileSpan: 'row-span-2', tabletSpan: 'md:row-span-2', desktopSpan: 'lg:row-span-2' },
+  { id: 2, src: '/gd.jpg', alt: 'Sok Tityapong on campus with university mentor at Royal University of Phnom Penh Cambodia', mobileSpan: 'row-span-2', tabletSpan: 'md:row-span-2', desktopSpan: 'lg:row-span-2' },
+  { id: 3, src: '/g2.jpg', alt: 'IT engineering team collaboration and project discussions', mobileSpan: 'row-span-1', tabletSpan: 'md:row-span-1', desktopSpan: 'lg:row-span-2' },
+  { id: 4, src: '/g8.jpg', alt: 'Creative design and CSS styling visual details', mobileSpan: 'row-span-2', tabletSpan: 'md:row-span-2', desktopSpan: 'lg:row-span-1' },
+  { id: 5, src: '/g4.jpg', alt: 'Developer desktop environment setup with code editor and Next.js layout', mobileSpan: 'row-span-1', tabletSpan: 'md:row-span-1', desktopSpan: 'lg:row-span-2' },
+  { id: 6, src: '/g5.jpg', alt: 'Abstract data structures and systems flow diagram representation', mobileSpan: 'row-span-2', tabletSpan: 'md:row-span-2', desktopSpan: 'lg:row-span-1' },
+  { id: 7, src: '/g6.jpg', alt: 'Phnom Penh city night lights representing technology growth in Cambodia', mobileSpan: 'row-span-1', tabletSpan: 'md:row-span-1', desktopSpan: 'lg:row-span-2' },
+  { id: 8, src: '/g7.jpg', alt: 'Phnom Penh street lights during developer event meetups', mobileSpan: 'row-span-1', tabletSpan: 'md:row-span-1', desktopSpan: 'lg:row-span-2' },
 ];
 
 const containerVariants = {

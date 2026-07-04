@@ -2,9 +2,18 @@
 
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Award, BookOpen, Code2, Star, Trophy, Zap } from 'lucide-react';
+import { Award, BookOpen, Code2, Shield, Star, Trophy, Zap } from 'lucide-react';
 
 const achievements = [
+  {
+    icon: Shield,
+    title: 'Cyber Arena 2026',
+    org: 'Team H1T – National Cybersecurity CTF',
+    description: "Participated in Cyber Arena 2026, Cambodia's national cybersecurity Capture The Flag (CTF) competition, as a member of Team H1T. Selected as one of the Top 10 reserve teams, competing across Digital Forensics, Binary Exploitation (Pwn), Cryptography, Reverse Engineering, Web Security, and OSINT.",
+    color: '#a855f7',
+    year: '2026',
+  },
+
   {
     icon: Star,
     title: 'Full Scholarship',

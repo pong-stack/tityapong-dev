@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import Navbar from './components/Navbar';
 import Hero from './components/HeroSection';
-import AboutSection from './components/AboutSection';
 import Resume from './components/Edu_Exp';
 import Skill from './components/Skill';
 import Projects from './components/Projects';
@@ -37,9 +36,6 @@ export default function page() {
 
       {/* Main content */}
       <main>
-        {/* About Section */}
-        <AboutSection />
-
         {/* Experience & Education Timeline */}
         <Resume />
 

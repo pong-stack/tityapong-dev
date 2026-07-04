@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { MapPin, ArrowDown, Github, Linkedin, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 
-const roles = ['Full Stack Developer', 'Next.js Developer', 'React Developer'];
+const roles = ['Full Stack Developer'];
 
 export default function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -87,7 +87,7 @@ export default function Hero() {
                   Sok Tityapong
                 </p>
                 <p className="text-lg font-semibold leading-snug" style={{ color: '#38bdf8' }}>
-                  Full Stack <br /> Developer
+                  Full Stack Developer
                 </p>
               </div>
               <div className="relative w-24 h-24 flex-shrink-0 rounded-full overflow-hidden border border-zinc-800 bg-zinc-950">
