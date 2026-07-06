@@ -54,7 +54,6 @@ const experiences: Experience[] = [
       'Reviewed and debugged code to maintain high code quality and performance',
       'Ensured maintainability by following clean code practices and component reusability',
     ],
-    url: 'https://www.cotafer.group/',
   },
 ];
 
@@ -136,7 +135,91 @@ function TimelineItem({
     const [open, setOpen] = useState(false);
     const hasBullets = bullets.length > 0;
 
-    const card = (
+    const cardContent = (
+      <>
+        {/* Top: logo + name + role + chevron */}
+        <div className="flex items-center gap-3 w-full">
+          <div
+            className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
+            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+          >
+            <Image
+              src={logo || '/placeholder.svg'}
+              alt={title}
+              width={40}
+              height={40}
+              className="object-contain rounded-lg"
+            />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-sm text-[var(--text-primary)] leading-tight">{title}</h3>
+            <p className="text-xs mt-0.5" style={{ color: '#38bdf8' }}>{subtitle}</p>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {isCurrent && (
+              <span
+                className="w-2 h-2 rounded-full animate-pulse"
+                style={{ background: '#34d399' }}
+              />
+            )}
+            {hasBullets && (
+              <motion.div
+                animate={{ rotate: open ? 180 : 0 }}
+                transition={{ duration: 0.25, ease: 'easeInOut' }}
+              >
+                <ChevronDown className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
+              </motion.div>
+            )}
+          </div>
+        </div>
+
+        {/* Date row */}
+        <div className="flex items-center justify-between w-full">
+          <span className="text-xs font-mono" style={{ color: 'var(--text-muted)' }}>
+            {dateRange}
+          </span>
+          {url && !hasBullets && (
+            <span className="inline-flex items-center gap-1 text-xs font-medium" style={{ color: '#38bdf8' }}>
+              <ExternalLink className="w-2.5 h-2.5" />
+              Visit Website
+            </span>
+          )}
+        </div>
+      </>
+    );
+
+    const renderHeader = () => {
+      if (hasBullets) {
+        return (
+          <button
+            type="button"
+            className="w-full flex flex-col gap-3 p-4 text-left focus:outline-none"
+            onClick={() => setOpen(o => !o)}
+          >
+            {cardContent}
+          </button>
+        );
+      }
+      if (url) {
+        return (
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full flex flex-col gap-3 p-4 text-left cursor-pointer"
+          >
+            {cardContent}
+          </a>
+        );
+      }
+      return (
+        <div className="w-full flex flex-col gap-3 p-4 text-left">
+          {cardContent}
+        </div>
+      );
+    };
+
+    return (
       <motion.div
         variants={itemVariants}
         className="lg:hidden rounded-2xl mb-3 overflow-hidden"
@@ -146,55 +229,8 @@ function TimelineItem({
           backdropFilter: 'blur(16px)',
         }}
       >
-        {/* Header row — always visible, tappable */}
-        <button
-          type="button"
-          className="w-full flex flex-col gap-3 p-4 text-left"
-          onClick={() => hasBullets && setOpen(o => !o)}
-        >
-          {/* Top: logo + name + role + chevron */}
-          <div className="flex items-center gap-3">
-            <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
-              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
-            >
-              <Image
-                src={logo || '/placeholder.svg'}
-                alt={title}
-                width={40}
-                height={40}
-                className="object-contain rounded-lg"
-              />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-sm text-[var(--text-primary)] leading-tight">{title}</h3>
-              <p className="text-xs mt-0.5" style={{ color: '#38bdf8' }}>{subtitle}</p>
-            </div>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              {isCurrent && (
-                <span
-                  className="w-2 h-2 rounded-full animate-pulse"
-                  style={{ background: '#34d399' }}
-                />
-              )}
-              {hasBullets && (
-                <motion.div
-                  animate={{ rotate: open ? 180 : 0 }}
-                  transition={{ duration: 0.25, ease: 'easeInOut' }}
-                >
-                  <ChevronDown className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
-                </motion.div>
-              )}
-            </div>
-          </div>
-
-          {/* Date row */}
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-mono" style={{ color: 'var(--text-muted)' }}>
-              {dateRange}
-            </span>
-          </div>
-        </button>
+        {/* Header row — interactive depending on content */}
+        {renderHeader()}
 
         {/* Collapsible body */}
         <AnimatePresence initial={false}>
@@ -225,7 +261,7 @@ function TimelineItem({
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs mt-2"
+                    className="inline-flex items-center gap-1.5 text-xs mt-2 hover:underline"
                     style={{ color: '#38bdf8' }}
                     onClick={e => e.stopPropagation()}
                   >
@@ -239,8 +275,6 @@ function TimelineItem({
         </AnimatePresence>
       </motion.div>
     );
-
-    return card;
   }
 
   // ── Desktop timeline (shown at lg+) ──────────────────────────────────────
@@ -257,9 +291,9 @@ function TimelineItem({
             isCurrent
               ? {}
               : {
-                background: 'rgba(56,189,248,0.5)',
-                border: '2px solid rgba(56,189,248,0.3)',
-              }
+                  background: 'rgba(56,189,248,0.5)',
+                  border: '2px solid rgba(56,189,248,0.3)',
+                }
           }
         />
         {!isLast && (
@@ -270,83 +304,155 @@ function TimelineItem({
         )}
       </div>
 
-      {/* Card */}
-      <div
-        className="flex-1 glass-card p-5 mb-0 group cursor-default"
-        style={{ borderRadius: '14px' }}
-      >
-        <div className="flex flex-col gap-4">
-          <div className="flex items-start justify-between gap-4">
-            {/* Logo + Title */}
-            <div className="flex items-start gap-3">
-              <div
-                className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
-                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
-              >
-                <Image
-                  src={logo || '/placeholder.svg'}
-                  alt={title}
-                  width={36}
-                  height={36}
-                  className="object-contain rounded-lg"
-                />
-              </div>
-              <div>
-                <h3 className="font-semibold text-[var(--text-primary)] leading-tight">{title}</h3>
-                <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                  <span
-                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                    style={{ background: 'rgba(56,189,248,0.10)', color: '#38bdf8', border: '1px solid rgba(56,189,248,0.2)' }}
-                  >
-                    {subtitle}
-                  </span>
-                  {isCurrent && (
-                    <span
-                      className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium"
-                      style={{ background: 'rgba(52,211,153,0.1)', color: '#34d399', border: '1px solid rgba(52,211,153,0.2)' }}
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
-                      Current
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Date */}
-            <div
-              className="flex items-center gap-1.5 px-3 py-1 rounded-full flex-shrink-0 text-xs"
-              style={{ background: 'rgba(255,255,255,0.04)', color: 'var(--text-muted)', border: '1px solid rgba(255,255,255,0.06)' }}
-            >
-              <Calendar className="w-3 h-3" />
-              <span className="whitespace-nowrap font-medium">{dateRange}</span>
-            </div>
-          </div>
-
-          {/* Bullets */}
-          {bullets.length > 0 && (
-            <div className="space-y-2">
-              {bullets.map((b, i) => (
-                <div key={i} className="flex items-start gap-2.5">
-                  <div
-                    className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0"
-                    style={{ background: '#38bdf8' }}
+      {/* Card Wrapper */}
+      {url ? (
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-1 glass-card p-5 mb-0 group cursor-pointer block hover:border-[#38bdf8]/35 transition-colors duration-300"
+          style={{ borderRadius: '14px' }}
+        >
+          <div className="flex flex-col gap-4">
+            <div className="flex items-start justify-between gap-4">
+              {/* Logo + Title */}
+              <div className="flex items-start gap-3">
+                <div
+                  className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+                >
+                  <Image
+                    src={logo || '/placeholder.svg'}
+                    alt={title}
+                    width={36}
+                    height={36}
+                    className="object-contain rounded-lg"
                   />
-                  <p className="text-sm text-[var(--text-muted)] leading-relaxed">{b}</p>
                 </div>
-              ))}
-            </div>
-          )}
+                <div>
+                  <h3 className="font-semibold text-[var(--text-primary)] leading-tight">{title}</h3>
+                  <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                    <span
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                      style={{ background: 'rgba(56,189,248,0.10)', color: '#38bdf8', border: '1px solid rgba(56,189,248,0.2)' }}
+                    >
+                      {subtitle}
+                    </span>
+                    {isCurrent && (
+                      <span
+                        className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium"
+                        style={{ background: 'rgba(52,211,153,0.1)', color: '#34d399', border: '1px solid rgba(52,211,153,0.2)' }}
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
+                        Current
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
 
-          {/* Visit Link */}
-          {url && (
-            <div className="flex items-center gap-1.5 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ color: '#38bdf8' }}>
+              {/* Date */}
+              <div
+                className="flex items-center gap-1.5 px-3 py-1 rounded-full flex-shrink-0 text-xs"
+                style={{ background: 'rgba(255,255,255,0.04)', color: 'var(--text-muted)', border: '1px solid rgba(255,255,255,0.06)' }}
+              >
+                <Calendar className="w-3 h-3" />
+                <span className="whitespace-nowrap font-medium">{dateRange}</span>
+              </div>
+            </div>
+
+            {/* Bullets */}
+            {bullets.length > 0 && (
+              <div className="space-y-2">
+                {bullets.map((b, i) => (
+                  <div key={i} className="flex items-start gap-2.5">
+                    <div
+                      className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0"
+                      style={{ background: '#38bdf8' }}
+                    />
+                    <p className="text-sm text-[var(--text-muted)] leading-relaxed">{b}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Visit Link */}
+            <div className="flex items-center gap-1.5 text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:underline" style={{ color: '#38bdf8' }}>
               <ExternalLink className="w-3 h-3" />
               <span>Visit Website</span>
             </div>
-          )}
+          </div>
+        </a>
+      ) : (
+        <div
+          className="flex-1 glass-card p-5 mb-0 group cursor-default"
+          style={{ borderRadius: '14px' }}
+        >
+          <div className="flex flex-col gap-4">
+            <div className="flex items-start justify-between gap-4">
+              {/* Logo + Title */}
+              <div className="flex items-start gap-3">
+                <div
+                  className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+                >
+                  <Image
+                    src={logo || '/placeholder.svg'}
+                    alt={title}
+                    width={36}
+                    height={36}
+                    className="object-contain rounded-lg"
+                  />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-[var(--text-primary)] leading-tight">{title}</h3>
+                  <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                    <span
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                      style={{ background: 'rgba(56,189,248,0.10)', color: '#38bdf8', border: '1px solid rgba(56,189,248,0.2)' }}
+                    >
+                      {subtitle}
+                    </span>
+                    {isCurrent && (
+                      <span
+                        className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium"
+                        style={{ background: 'rgba(52,211,153,0.1)', color: '#34d399', border: '1px solid rgba(52,211,153,0.2)' }}
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
+                        Current
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Date */}
+              <div
+                className="flex items-center gap-1.5 px-3 py-1 rounded-full flex-shrink-0 text-xs"
+                style={{ background: 'rgba(255,255,255,0.04)', color: 'var(--text-muted)', border: '1px solid rgba(255,255,255,0.06)' }}
+              >
+                <Calendar className="w-3 h-3" />
+                <span className="whitespace-nowrap font-medium">{dateRange}</span>
+              </div>
+            </div>
+
+            {/* Bullets */}
+            {bullets.length > 0 && (
+              <div className="space-y-2">
+                {bullets.map((b, i) => (
+                  <div key={i} className="flex items-start gap-2.5">
+                    <div
+                      className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0"
+                      style={{ background: '#38bdf8' }}
+                    />
+                    <p className="text-sm text-[var(--text-muted)] leading-relaxed">{b}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </motion.div>
   );
 
